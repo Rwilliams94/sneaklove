@@ -61,39 +61,63 @@ router.post ("/products_add", async (req, res, next) => {
 
 
 // update sneakers
-
 router.get("one-product/:id", async (req, res, next) => {
   try {
-    res.render("", await SneakerModel.findById(req.params.id));
+    res.render("one-product", await SneakerModel.findById(req.params.id));
   } catch (err) {
     next(err);
   }
 });
 
-// router.post("/sneaker-collection/:id",
-//   uploader.single("sneaker"),
-//   async (req, res, next) => {
-//     try {
-//       const sneakerToUpdate = { ...req.body };
-//       if (req.file) sneakerToUpdate.picture = req.file.path;
+// uploader.single("sneaker"),
+router.post("/sneaker-collection/:id",
+  async (req, res, next) => {
+    try {
+      const sneakerToUpdate = { ...req.body };
 
-//       await SneakerModel.findByIdAndUpdate(req.params.id, sneakerToUpdate);
-//       res.redirect("/");
-//     } catch (err) {
-//       next(err);
-//     }
-//   }
-// );
-
+      await SneakerModel.findByIdAndUpdate(req.params.id, sneakerToUpdate);
+      res.redirect("/sneakers/collection");
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 
+//filter the category (men,women,kid)
 router.get("/sneakers/:cat", (req, res) => {
-  console.log(req.params.cat)
-  res.render("products");
+  SneakerModel.find({category : req.params.cat})
+  .then((dbRes) => {
+      res.render("products", {
+        sneakers: dbRes
+      });
+    })
+    .catch((dbError) => {
+      next(dbError);
+    });
 });
 
-router.get("/one-product/:id", (req, res) => {
-  res.render("one_product");
+
+//get sneakers by id
+router.get("/one-product/:id",
+  async (req, res, next) => {
+    try {
+      const oneSneaker = await SneakerModel.findByIdAndUpdate(req.params.id);
+      res.render("one_product", {sneaker : oneSneaker});
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+//find a product with the id and remove it
+router.get("/one-product/:id", async (req, res, next) => {
+  try {
+    await SneakerModel.findByIdAndRemove(req.params.id);
+    res.redirect("/");
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
