@@ -1,5 +1,6 @@
 const express = require("express"); // import express in this module
 const SneakerModel = require("./../models/Sneaker");
+const TagsModel = require("./../models/Tag");
 const router = new express.Router(); // create an app sub-module (router)
 
 // logged in users are able to create new products
@@ -39,7 +40,12 @@ router.post("/product-edit/:id", (req, res, next) => {
 
 //create a new sneaker
 router.get("/add", (req, res, next) => {
-    res.render("products_add")
+    TagsModel.find()
+    
+    .then(tags => {
+        console.log(tags)
+        res.render("products_add", {tags})})
+    .catch(err => next(err))
 })
 
 router.post("/add", (req, res, next) => {
@@ -48,6 +54,8 @@ router.post("/add", (req, res, next) => {
         res.redirect("/dashboard_sneaker");
     })
     .catch(err=>console.error(err))
+
+
 })
 
 //delete a sneaker
@@ -55,6 +63,18 @@ router.get("/delete/:id", (req, res, next) => {
     SneakerModel.findByIdAndDelete(req.params.id)
     .then(res.redirect("/dashboard_sneaker"))
     .catch(next)
+})
+
+
+router.post("/addtag", (req, res, next) => {
+
+    TagsModel.create(req.body)
+    .then(
+        res.redirect("/dashboard_sneaker/add")
+    )
+    .catch(err=>console.error(err))
+    
+
 })
 
 module.exports = router;
