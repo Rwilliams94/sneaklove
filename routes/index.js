@@ -26,7 +26,7 @@ router.get("/sneakers/collection", async (req, res, next) => {
   try {
     const sneakers = await SneakerModel.find().populate("id_tags");
     const tags = await TagsModel.find();
-
+    console.log(sneakers)
     res.render("products", {sneakers, tags})
 
   } catch (err) {
