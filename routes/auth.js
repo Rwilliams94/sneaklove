@@ -48,20 +48,23 @@ router.post("/signup", async (req, res, next)=>{
     const foundUser = await UserModel.findOne({email:newUser.email})
 
         if (foundUser) {
-            res.render("signup.hbs", { msg: "Email already signed up" });
+            req.flash("warning", "Email already registered");
+            res.redirect("/signup");
         } else {
             const hashedPassword = bcrypt.hashSync(newUser.password, 10);
             newUser.password = hashedPassword;
-            await UserModel.create(newUser);
-            res.render("/signin", {msg:"Congrats ! You are now registered !"});
+            UserModel.create(newUser);
+            req.flash("success", "Congrats ! You are now registered !");
+            res.redirect("/signin");
         } 
 
     }catch (err) {
     let errorMessage = "";
     for (field in err.errors) {
         errorMessage += err.errors[field].message + "\n";
-    } res.render("signup.hbs", { msg: errorMessage });
-    }
+    } req.flash("error", errorMessage);
+    res.redirect("/signup");
+  }
 
 });
 
