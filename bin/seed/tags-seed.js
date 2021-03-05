@@ -2,18 +2,34 @@
 // create a test data set of valid users
 require("dotenv").config();
 require("../../config/mongodb"); // fetch the db connection
-const TagsModel = require("../../models/Sneaker"); // fetch the model to validate our user document before insertion (in database)
+const TagsModel = require("../../models/Tag"); // fetch the model to validate our user document before insertion (in database)
 
-const sneakers = [
-
-
+const tags = [
+{
+  label: "basketball"
+},
+{
+  label: "football"
+},
+{
+  label: "running"
+},
+{
+  label: "casual"
+},
+{
+  label: "rare"
+},
+{
+  label: "celebrity"
+}
 ];
 
-(async function insertLabels() {
+(async function insertTags() {
   try {
-    await ArtistModel.deleteMany(); // empty the styles db collection
-    const inserted = await ArtistModel.insertMany(artists); // insert docs in db
-    console.log(`seed artists done : ${inserted.length} documents inserted !`);
+    await TagsModel.deleteMany(); // empty the styles db collection
+    const inserted = await TagsModel.insertMany(tags); // insert docs in db
+    console.log(`seed tags done : ${inserted.length} documents inserted !`);
   } catch (err) {
     console.error(err);
   }
