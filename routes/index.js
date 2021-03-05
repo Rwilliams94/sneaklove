@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+console.log("hello")
 return console.log(`\n\n
 -----------------------------
 -----------------------------
@@ -9,25 +10,27 @@ return console.log(`\n\n
 -----------------------------\n\n`
 );
 
-router.get("/", (req, res) => {
-  res.send("foo");
-});
+console.log("hello")
 
-router.get("/sneakers/:cat", (req, res) => {
-  res.send("bar");
-});
+// router.get("/", (req, res) => {
+//   res.send("foo");
+// });
 
-router.get("/one-product/:id", (req, res) => {
-  res.send("baz");
-});
+// router.get("/sneakers/:cat", (req, res) => {
+//   res.send("bar");
+// });
 
-router.get("/signup", (req, res) => {
-  res.send("sneak");
-});
+// router.get("/one-product/:id", (req, res) => {
+//   res.send("baz");
+// });
 
-router.get("/signin", (req, res) => {
-  res.send("love");
-});
+// router.get("/signup", (req, res) => {
+//   res.send("sneak");
+// });
+
+// router.get("/signin", (req, res) => {
+//   res.send("love");
+// });
 
 
 module.exports = router;

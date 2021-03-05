@@ -3,6 +3,7 @@ require("./config/mongodb"); // database initial setup
 require("./helpers/hbs"); // utils for hbs templates
 
 // base dependencies
+const path = require("path");
 const express = require("express");
 const app = express();
 const createError = require("http-errors");
@@ -20,9 +21,9 @@ app.use(logger("dev"));
 
 // initial config
 app.set("view engine", "hbs");
-app.set("views", __dirname + "/view");
-app.use(express.static(__dirname, "public"));
-hbs.registerPartials(__dirname + "/views/partials");
+app.set("views", path.join(__dirname + "/view"));
+app.use(express.static(path.join(__dirname, "public")));
+hbs.registerPartials(path.join(__dirname + "/views/partials"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
@@ -53,15 +54,19 @@ if (dev_mode === true) {
   app.use(require("./middlewares/debugSessionInfos")); // affiche le contenu de la session
 }
 
-app.use(require("./middlewares/exposeLoginStatus")); // expose le status de connexion aux templates
-app.use(require("./middlewares/exposeFlashMessage")); // affiche les messages dans le template
+// app.use(require("./middlewares/exposeLoginStatus")); // expose le status de connexion aux templates
+// app.use(require("./middlewares/exposeFlashMessage")); // affiche les messages dans le template
 
 
+
+const indexRouter = require("./routes/index")
+const authRouter = require("./routes/auth")
+const dashboardRouter = require("./routes/dashboard_sneaker")
 
 // routers
-app.use("/", require("./routes/index"));
-app.use("/auth", require("./routes/auth"));
-app.use("/dashboard_sneaker", require("./routes/dashboard_sneaker"));
+app.use("/", indexRouter); // use routers
+app.use("/auth", authRouter);
+app.use("/dashboard_sneaker", dashboardRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -73,6 +78,7 @@ app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
+
   // render the error page
   res.status(err.status || 500);
   res.render("error");
