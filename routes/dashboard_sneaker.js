@@ -28,9 +28,14 @@ router.get("/product-edit/:id", (req, res, next) => {
     .catch(err=>console.error(err));
 })
 
-router.post("/product-edit/:id", uploader.single("sneaker"), (req, res, next) => {
-    SneakerModel.findByIdAndUpdate(req.params.id, req.body, {new:true})
-    .then(sneaker=> {
+router.post("/product-edit/:id", uploader.single("image"), (req, res, next) => {
+    const newSneaker = {...req.body};
+    console.log(req.file);
+    if (!req.file) newSneaker.image = undefined;
+    else newSneaker.image = req.file.path;
+    console.log(req.file.path);
+    SneakerModel.findByIdAndUpdate(req.params.id, newSneaker, {new:true})
+    .then(sneaker => {
         // console.log("req.params.id: ", req.params.id)
         // console.log("sneaker:", sneaker);
         // console.log("req.body: ",req.body);
