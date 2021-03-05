@@ -21,9 +21,9 @@ app.use(logger("dev"));
 
 // initial config
 app.set("view engine", "hbs");
-app.set("views", path.join(__dirname + "/view"));
+app.set("views", path.join(__dirname + "/views"));
 app.use(express.static(path.join(__dirname, "public")));
-hbs.registerPartials(path.join(__dirname + "/views/partials"));
+hbs.registerPartials(path.join(__dirname + "/views/partial"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
@@ -43,7 +43,7 @@ app.use(
 );
 
 // below, site_url is used in partials/shop_head.hbs to perform ajax request (var instead of hardcoded)
-app.locals.site_url = process.env.SITE_URL;
+// app.locals.site_url = process.env.SITE_URL;
 
 app.use(flash());
 
@@ -54,17 +54,17 @@ if (dev_mode === true) {
   app.use(require("./middlewares/debugSessionInfos")); // affiche le contenu de la session
 }
 
-// app.use(require("./middlewares/exposeLoginStatus")); // expose le status de connexion aux templates
-// app.use(require("./middlewares/exposeFlashMessage")); // affiche les messages dans le template
+app.use(require("./middlewares/exposeLoginStatus")); // expose le status de connexion aux templates
+app.use(require("./middlewares/exposeFlashMessage")); // affiche les messages dans le template
 
 
 
-const indexRouter = require("./routes/index")
+// const indexRouter = require("./routes/index")
 const authRouter = require("./routes/auth")
 const dashboardRouter = require("./routes/dashboard_sneaker")
 
 // routers
-app.use("/", indexRouter); // use routers
+app.use("/", require("./routes/index")) // use routers
 app.use("/auth", authRouter);
 app.use("/dashboard_sneaker", dashboardRouter);
 
