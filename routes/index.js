@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const SneakerModel = require("./../models/Sneaker");
+const TagsModel = require("./../models/Tag");
 
 
 console.log("hello");
 
 router.get('/', function(req, res, next) {
-  console.log("------------------THERE-------------");
+ 
   res.render('index');
 });
 
@@ -18,30 +19,25 @@ router.get("/signin", (req, res) => {
   res.render("signin");
 });
 
-console.log("----------------1----------------");
+
 
 //find sneakers collection
-router.get("/sneakers/collection", (req, res, next) => {
-  console.log("---------------2-----------------");
-  SneakerModel.find()
-    .then((dbRes) => {
-      res.render("products", {
-        sneakers: dbRes
-      });
-    })
-    .catch((dbError) => {
-      next(dbError);
-    });
+router.get("/sneakers/collection", async (req, res, next) => {
+  try {
+    const sneakers = await SneakerModel.find().populate("id_tags");
+    const tags = await TagsModel.find();
+
+    res.render("products", {sneakers, tags})
+
+  } catch (err) {
+    next(err)
+  }
 });
 
 
 // create sneaker
 router.post ("/products_add", async (req, res, next) => {
   const { name, ref, size, descriprion, price, category, id_tags } = req.body;
-  
-  console.log("+++------------+++++++++++++---------------+++");
-  console.log(req.body);
-  console.log("+++------------+++++++++++++---------------+++")
   
   try {
       await SneakerModel.create({
@@ -85,16 +81,16 @@ router.post("/sneaker-collection/:id",
 
 
 //filter the category (men,women,kid)
-router.get("/sneakers/:cat", (req, res) => {
-  SneakerModel.find({category : req.params.cat})
-  .then((dbRes) => {
-      res.render("products", {
-        sneakers: dbRes
-      });
-    })
-    .catch((dbError) => {
-      next(dbError);
-    });
+router.get("/sneakers/:cat", async (req, res, next) => {
+  try {
+    const sneakers = await SneakerModel.find({category: req.params.cat});
+    const tags = await TagsModel.find();
+
+    res.render("products", {sneakers, tags})
+    
+  } catch (err) {
+    next(err)
+  }
 });
 
 

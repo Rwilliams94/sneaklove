@@ -11,8 +11,26 @@ const sneakers = [
   description: "big foo sneaks",
   price: 1000,
   category: "men",
-  id_tags: []
-}
+  id_tags: ["60422d95cb92e5735cb70e33"]
+},
+{
+  name: "wooSneaks",
+  ref: "woo",
+  size: 5,
+  description: "lady sneaks",
+  price: 2000,
+  category: "women",
+  id_tags: ["60422d95cb92e5735cb70e34"]
+},
+{
+  name: "kidSneaks",
+  ref: "kids",
+  size: 15,
+  description: "tiny sneaks",
+  price: 10,
+  category: "kids",
+  id_tags: ["60422d95cb92e5735cb70e35"]
+},
 ];
 
 (async function insertSneakers() {

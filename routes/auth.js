@@ -71,7 +71,12 @@ router.post("/signup", async (req, res, next)=>{
 
 //GET 
 
-
+router.get( "/logout", (req, res, next)=> { 
+    req.session.destroy(function (err)
+    {
+        res.redirect("/signin");
+    });
+});
 
 
 
